@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body,
+        ul,
+        ol,
+        li,
+        img {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        #box {
+            width: 490px;
+            height: 270px;
+            padding: 5px;
+            position: relative;
+            border: 1px solid #ccc;
+            margin: 100px auto 0;
+        }
+
+        .ad {
+            width: 490px;
+            height: 270px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #box img {
+            width: 490px;
+        }
+
+        .ad ol {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+        }
+
+        .ad ol li {
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            border: 1px solid #ccc;
+            text-align: center;
+            background: #fff;
+            float: left;
+            margin-right: 10px;
+            cursor: pointer;
+            _display: inline;
+        }
+
+        .ad ol li.current {
+            background: yellow;
+        }
+
+        .ad ul li {
+            float: left;
+        }
+
+        .ad ul {
+            position: absolute;
+            top: 0;
+            width: 2940px;
+        }
+
+        .ad ul li.current {
+            display: block;
+        }
+
+        #arr {
+            display: none;
+        }
+
+        #box:hover #arr {
+            display: block;
+        }
+
+        #arr span {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            margin-top: -20px;
+            background: #000;
+            cursor: pointer;
+            line-height: 40px;
+            text-align: center;
+            font-weight: bold;
+            font-family: '黑体';
+            font-size: 30px;
+            color: #fff;
+            opacity: 0.3;
+            border: 1px solid #fff;
+        }
+
+        #arr #right {
+            right: 5px;
+            left: auto;
+        }
+
+        .square {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+        }
+
+        .square span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: #c0c6ff;
+            text-align: center;
+            line-height: 20px;
+            cursor: pointer;
+        }
+
+        .square span.current {
+            background-color: orangered;
+            color: #fff;
+        }
+    </style>
+
+</head>
+
+<body>
+<div id="box" class="all">
+    <div class="ad">
+        <ul id="imgs">
+            <li><img src="images/1.jpg"/></li>
+            <li><img src="images/2.jpg"/></li>
+            <li><img src="images/3.jpg"/></li>
+            <li><img src="images/4.jpg"/></li>
+            <li><img src="images/5.jpg"/></li>
+        </ul>
+        <div class="square">
+            <span class="current">1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+        </div>
+    </div>
+
+    <div id="arr">
+        <span id="left">&lt;</span>
+        <span id="right">&gt;</span>
+    </div>
+</div>
+
+<script>
+    const box = document.getElementById('box')
+    const ulBox = document.querySelector('ul')
+    const imgs = document.getElementById('imgs')
+    const square=document.querySelector('.square')
+
+    //li的数量
+    const liNumber = imgs.children.length
+    //li的长度
+    const liBoxLength = document.querySelector('li').offsetWidth
+    const arr = document.getElementById('arr')
+    const arrLeft = document.getElementById('left')
+    const arrRight = document.getElementById('right')
+
+
+    console.log(liNumber)
+    // 左右轮播导航显示
+    box.addEventListener('mouseover', () => {
+        arr.style.display = 'block'
+
+    })
+
+    box.addEventListener('mouseout', () => {
+        arr.style.display = 'none'
+    })
+
+    let currentIndex = 0
+    // 右导航
+    arrRight.addEventListener('click', () => {
+
+        if (currentIndex < liNumber - 1) {
+            currentIndex++
+            console.log('Right,currentIndex')
+            console.log(currentIndex)
+            //点击按钮 激活
+            Array.from(square.children).forEach((item)=>{
+                item.classList.remove('current')
+            })
+            square.children[currentIndex].classList.add('current')
+        }
+        //位移长度
+        const moveLength = currentIndex * liBoxLength
+        moveAnimation(ulBox, -moveLength)
+
+
+    })
+
+    //左导航
+    arrLeft.addEventListener('click', () => {
+
+        if (currentIndex > 0) {
+            currentIndex--
+            console.log('Left,currentIndex')
+            console.log(currentIndex)
+            //点击按钮 激活
+            Array.from(square.children).forEach((item)=>{
+                item.classList.remove('current')
+            })
+            square.children[currentIndex].classList.add('current')
+        }
+        //位移长度
+        const moveLength = currentIndex * liBoxLength
+
+        moveAnimation(ulBox, moveLength)
+
+    })
+
+
+    square.addEventListener('click',(el)=>{
+        //当前元素
+        const currentEl=el.target
+
+        //获取索引
+      currentIndex=+currentEl.innerText-1
+
+        //点击按钮 激活
+        Array.from(square.children).forEach((item)=>{
+            item.classList.remove('current')
+        })
+        currentEl.classList.add('current')
+
+        // 位移的长度
+        // console.log(currentIndex)
+        const moveLength=currentIndex*liBoxLength
+
+        // console.log(moveLength)
+
+        moveAnimation(ulBox,-moveLength)
+
+    })
+
+
+
+
+    //实现移动动画
+    function moveAnimation(el, target) {
+        clearInterval(el.timer)
+        let currentPosition = el.offsetLeft;
+        const step = currentPosition < target ? 3 : -3
+
+        el.timer = setInterval(() => {
+            if (Math.abs(target - currentPosition) > Math.abs(step)) {
+                currentPosition += step
+                el.style.left = `${currentPosition}px`
+                // console.log(currentPosition)
+            } else {
+                el.style.left = `${target}px`
+                clearInterval(el.timer)
+            }
+
+        }, 10)
+    }
+
+
+
+</script>
+
+</body>
+
+</html>

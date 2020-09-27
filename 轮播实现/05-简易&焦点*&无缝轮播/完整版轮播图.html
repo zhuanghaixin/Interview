@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            border: 0;
+        }
+
+        .all {
+            width: 500px;
+            height: 200px;
+            padding: 7px;
+            border: 1px solid #ccc;
+            margin: 100px auto;
+            position: relative;
+        }
+
+        .screen {
+            width: 500px;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .screen li {
+            width: 500px;
+            height: 200px;
+            overflow: hidden;
+            float: left;
+        }
+
+        .screen ul {
+            position: absolute;
+            left: 0;
+            top: 0px;
+            width: 3000px;
+        }
+
+        .all ol {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        .all ol li {
+            float: left;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 1px solid #ccc;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .all ol li.current {
+            background: yellow;
+        }
+
+        #arr {
+            display: none;
+        }
+
+        #arr span {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            margin-top: -20px;
+            background: #000;
+            cursor: pointer;
+            line-height: 40px;
+            text-align: center;
+            font-weight: bold;
+            font-family: '黑体';
+            font-size: 30px;
+            color: #fff;
+            opacity: 0.6;
+            border: 1px solid #fff;
+        }
+
+        #arr #right {
+            right: 5px;
+            left: auto;
+        }
+    </style>
+
+</head>
+<body>
+<div class="all" id='box'>
+    <div class="screen">
+        <ul>
+            <li><img src="images/1.jpg" width="500" height="200"/></li>
+            <li><img src="images/2.jpg" width="500" height="200"/></li>
+            <li><img src="images/3.jpg" width="500" height="200"/></li>
+            <li><img src="images/4.jpg" width="500" height="200"/></li>
+            <li><img src="images/5.jpg" width="500" height="200"/></li>
+
+            <!-- 如果要实现无缝轮播,要使用js来添加一张替身图片 -->
+        </ul>
+        <ol>
+            <!-- 动态创建的小方块，添加在这里，样式已经给写好了-->
+        </ol>
+    </div>
+    <div id="arr">
+        <span id="left">&lt;</span>
+        <span id="right">&gt;</span>
+    </div>
+</div>
+<script>
+    const box = document.getElementById('box')
+    const ulBox = document.querySelector('ul')
+    const moveWidth = document.querySelector('li').offsetWidth
+    // console.log(moveWidth)
+    const olBox = document.querySelector('ol')
+    const arrow = document.getElementById('arr')
+    const leftArr = document.getElementById('left')
+    const rightArr = document.getElementById('right')
+    //定时器
+    let timer
+
+
+    box.addEventListener('mouseover', () => {
+        arrow.style.display = 'block'
+        clearInterval(timer);
+    })
+    box.addEventListener('mouseleave', () => {
+        arrow.style.display = 'none'
+        timer=setInterval(nextClick,2000)
+    })
+
+    for (let i = 0; i < ulBox.children.length; i++) {
+        let liBox = document.createElement('li')
+        liBox.innerText = i + 1
+        olBox.appendChild(liBox)
+        if (i === 0) {
+            liBox.classList.add('current')
+        }
+    }
+
+    //给olBox设置index
+
+    let numberArr = olBox.children
+    for (let i = 0; i < numberArr.length; i++) {
+        numberArr[i].setAttribute('index', i)
+        numberArr[i].addEventListener('click', () => {
+
+            //排他
+            reset();
+            numberArr[i].classList.add('current');
+
+            const target = -i * moveWidth
+            moveAnimation(ulBox, target)
+
+
+
+            // 当点击数字按钮的时候,将数字按钮的索引与clickCount进行同步
+           clickCount=numberArr[i].getAttribute('index')
+
+        })
+    }
+
+    //设置替身图片
+    const cloneLi = ulBox.children[0].cloneNode(true)
+
+    ulBox.append(cloneLi)
+
+    let clickCount = 0
+    rightArr.addEventListener('click',nextClick)
+
+    //封装
+    function nextClick(){
+            //如果点击次数为5，当前图片索引为5，索引即跳到替身的图片，然后立刻将ulBox切换到第0张到位置
+            if(clickCount===ulBox.children.length-1){ //5
+                ulBox.style.left ='0px'
+                clickCount=0
+            }
+            clickCount++
+            //当前位移长度
+            let target=-clickCount*moveWidth
+
+            //调用动画函数
+            moveAnimation(ulBox, target)
+
+
+
+            // 当点击箭头按钮的时候,要同步数字数字按钮的背景颜色
+            reset();
+            // clickCount:   1 2 3 4 5
+            // 数字按钮索引:0 1 2 3 4
+            //clickCount 索引到哪里，我们就给数字按钮索引添加激活到类
+            //但是当我们点到最后一张，是替身的时候,我们让数字按钮索引的第0个激活
+
+            console.log('clickCount rightArr')
+            console.log(clickCount)
+            if(clickCount===5){
+                numberArr[0].classList.add('current')
+            }else{
+                numberArr[clickCount].classList.add('current')
+            }
+
+
+
+
+    }
+
+    leftArr.addEventListener('click', function () {
+        //如果是第0张,即索引为0，也就是clickCount为0，我们就让ulBox回到替身位置，然后位移ulBox总宽度
+        if(clickCount===0){
+            console.log((ulBox.children.length-1)*moveWidth)
+            ulBox.style.left =`-${(ulBox.children.length-1)*moveWidth}px`
+            clickCount=5
+        }
+        clickCount--
+        //当前位移长度
+        let target=-clickCount*moveWidth
+        //调用动画函数
+        moveAnimation(ulBox, target)
+
+
+        reset()
+        numberArr[clickCount].classList.add('current')
+
+
+
+    })
+
+    //自动轮播
+    timer=setInterval(nextClick,2000)
+
+    //排他
+    function reset() {
+        for (let j = 0; j < numberArr.length; j++) {
+            numberArr[j].classList.remove('current')
+        }
+    }
+
+    //实现移动动画
+    function moveAnimation(el, target) {
+        clearInterval(el.timer)
+        let currentPosition = el.offsetLeft;
+        const step = currentPosition < target ? 3 : -3
+
+        el.timer = setInterval(() => {
+            if (Math.abs(target - currentPosition) > Math.abs(step)) {
+                currentPosition += step
+                el.style.left = `${currentPosition}px`
+                // console.log(currentPosition)
+            } else {
+                el.style.left = `${target}px`
+                clearInterval(el.timer)
+            }
+
+        }, 5)
+    }
+</script>
+</body>
+</html>

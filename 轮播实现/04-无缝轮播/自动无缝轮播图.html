@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            vertical-align: top;
+        }
+
+        .box {
+            width: 300px;
+            height: 200px;
+            margin: 100px auto;
+            position: relative;
+            background: pink;
+            overflow: hidden;
+            /*background-size: 100%; */
+            cursor:pointer;
+        }
+        .box ul {
+            width: 1500px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .box ul li {
+            float: left;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="box" id="divBox">
+    <ul>
+        <li><img src="images/01.jpg" alt=""/></li>
+        <li><img src="images/02.jpg" alt=""/></li>
+        <li><img src="images/03.jpg" alt=""/></li>
+        <li><img src="images/04.jpg" alt=""/></li>
+        <li><img src="images/01.jpg" alt=""/></li>
+    </ul>
+</div>
+
+
+<script>
+        const divBox = document.getElementById('divBox')
+        const ulBox = divBox.querySelector('ul')
+        //li的数量
+
+        document.addEventListener('DOMContentLoaded',function(){
+            let liBoxLength = document.querySelector('li').offsetWidth
+            console.log('liBoxLength')
+            console.log(liBoxLength)
+        })
+
+
+    const liNumber = ulBox.children.length
+    // console.log(liNumber)
+    //li的长度
+
+
+    //定时器
+    let timer;
+
+
+
+    ulBox.timer=setInterval(infinityMove,10)
+
+
+
+    divBox.addEventListener('mouseover',()=>{
+
+        clearInterval(ulBox.timer)
+
+
+    })
+    divBox.addEventListener('mouseout',()=>{
+
+        ulBox.timer=setInterval(infinityMove,10)
+
+    })
+
+    //无限循环动画
+    function infinityMove(){
+        let liBoxLength = document.querySelector('li').offsetWidth
+        //位移长度的最大范围
+        const moveLength=(liNumber-1)*liBoxLength
+        let currentPosition=document.querySelector('ul').offsetLeft
+        currentPosition-=3
+        if(currentPosition>-moveLength){
+
+            ulBox.style.left=`${currentPosition}px`
+        }else{
+            ulBox.style.left=`0px`
+        }
+    }
+</script>
+
+
+</body>
+</html>
+
+
