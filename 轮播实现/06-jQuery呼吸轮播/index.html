@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>京东呼吸轮播图</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .slider {
+            height: 340px;
+            width: 790px;
+            margin: 100px auto;
+            position: relative;
+
+
+        }
+
+        .slider > ul > li {
+            position: absolute;
+            display: none;
+        }
+
+        .slider > ul > li:first-child {
+            display: block;
+        }
+
+
+        .arrow {
+            display: none;
+        }
+
+        .slider:hover .arrow {
+            display: block;
+        }
+
+        .arrow-left,
+        .arrow-right {
+            font-family: "SimSun", "宋体";
+            width: 30px;
+            height: 60px;
+            background-color: rgba(0, 0, 0, 0.1);
+            position: absolute;
+            top: 50%;
+            margin-top: -30px;
+            cursor: pointer;
+            text-align: center;
+            line-height: 60px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 30px;
+        }
+
+        .arrow-left:hover,
+        .arrow-right:hover {
+            background-color: rgba(0, 0, 0, .5);
+        }
+
+        .arrow-left {
+            left: 0;
+        }
+
+        .arrow-right {
+            right: 0;
+        }
+
+        .pagination {
+            position: absolute;
+            width: 300px;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+
+        }
+
+        .pagination ul {
+            display: flex;
+
+            justify-content: space-between;
+        }
+
+        .pagination ul li {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pagination ul li.active {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+<div class="slider">
+    <!--图片容器  8图 -->
+    <ul>
+        <li><a href="#"><img src="images/jd/1.jpg" alt=""></a></li>
+        <li><a href="#"><img src="images/jd/2.jpg" alt=""></a></li>
+        <li><a href="#"><img src="images/jd/3.jpg" alt=""></a></li>
+        <li><a href="#"><img src="images/jd/4.jpg" alt=""></a></li>
+        <li><a href="#"><img src="images/jd/5.jpg" alt=""></a></li>
+        <li><a href="#"><img src="images/jd/6.jpg" alt=""></a></li>
+        <li><a href="#"><img src="images/jd/7.jpg" alt=""></a></li>
+        <li><a href="#"><img src="images/jd/8.jpg" alt=""></a></li>
+    </ul>
+    <!--箭头-->
+    <div class="arrow">
+        <span class="arrow-left">&lt;</span>
+        <span class="arrow-right">&gt;</span>
+    </div>
+    <div class="pagination">
+
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+
+        let index = 0
+        let liNumber = $('.slider li').length
+        let timer
+
+        $('.arrow-right').click(rightMove)
+
+
+        $('.arrow-left').click(leftMove)
+
+        //paginaition 生成pagination li
+        const $ul = $('<ul></ul>')
+        const El = $('.pagination').append($ul)
+        console.log(El)
+        // console.log(El)
+        $('.slider li').each((index, item) => {
+            const $li = $(`<li>${index+1}</li>`)
+            $li.appendTo($ul)
+        })
+        $('.pagination li').eq(0).addClass('active')
+
+        //点击显示隐藏
+        $('.pagination li').click(function () {
+            console.log($(this).index());
+            index = $(this).index()
+            $(this).addClass('active').siblings().removeClass('active')
+            $('.slider li').eq(index).fadeIn(500).siblings().fadeOut(500)
+        })
+
+
+
+        timer=setInterval(function() {
+            $('.arrow-right').trigger('click')
+        },1000)
+
+        //鼠标滑入暂停
+        $('.slider').mouseenter(function() {
+            clearInterval(timer)
+        })
+
+        //鼠标滑出播放
+        $('.slider').mouseleave(function() {
+            timer=setInterval(function() {
+                $('.arrow-right').trigger('click')
+            },1000)
+        })
+
+        function rightMove(){
+            index++
+            if (index == liNumber) {
+                index = 0
+            }
+            console.log(index)
+            $('.slider li').eq(index).fadeIn(500).siblings().fadeOut(500)
+            $('.pagination li').eq(index).addClass('active').siblings().removeClass('active')
+
+        }
+        function leftMove(){
+            index--
+
+            if (index == -1) {
+                index = liNumber - 1
+            }
+            console.log(index)
+            $('.slider li').eq(index).fadeIn(500).siblings().fadeOut(500)
+            $('.pagination li').eq(index).addClass('active').siblings().removeClass('active')
+        }
+    })
+
+</script>
+</body>
+
+</html>
