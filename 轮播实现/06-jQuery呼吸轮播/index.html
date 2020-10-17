@@ -143,7 +143,7 @@
         console.log(El)
         // console.log(El)
         $('.slider li').each((index, item) => {
-            const $li = $(`<li>${index+1}</li>`)
+            const $li = $(`<li>${index + 1}</li>`)
             $li.appendTo($ul)
         })
         $('.pagination li').eq(0).addClass('active')
@@ -153,28 +153,27 @@
             console.log($(this).index());
             index = $(this).index()
             $(this).addClass('active').siblings().removeClass('active')
-            $('.slider li').eq(index).fadeIn(500).siblings().fadeOut(500)
+            $('.slider li').eq(index).stop(true, false).fadeIn(500).siblings().stop(true, false).fadeOut(500)
         })
 
 
-
-        timer=setInterval(function() {
+        timer = setInterval(function () {
             $('.arrow-right').trigger('click')
-        },1000)
+        }, 1000)
 
         //鼠标滑入暂停
-        $('.slider').mouseenter(function() {
+        $('.slider').mouseenter(function () {
             clearInterval(timer)
         })
 
         //鼠标滑出播放
-        $('.slider').mouseleave(function() {
-            timer=setInterval(function() {
+        $('.slider').mouseleave(function () {
+            timer = setInterval(function () {
                 $('.arrow-right').trigger('click')
-            },1000)
+            }, 1000)
         })
 
-        function rightMove(){
+        function rightMove() {
             index++
             if (index == liNumber) {
                 index = 0
@@ -184,7 +183,8 @@
             $('.pagination li').eq(index).addClass('active').siblings().removeClass('active')
 
         }
-        function leftMove(){
+
+        function leftMove() {
             index--
 
             if (index == -1) {
