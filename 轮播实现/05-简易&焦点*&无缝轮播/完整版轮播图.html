@@ -200,7 +200,7 @@
 
             console.log('clickCount rightArr')
             console.log(clickCount)
-            if(clickCount===5){
+            if(clickCount===ulBox.children.length-1){
                 numberArr[0].classList.add('current')
             }else{
                 numberArr[clickCount].classList.add('current')
@@ -216,7 +216,7 @@
         if(clickCount===0){
             console.log((ulBox.children.length-1)*moveWidth)
             ulBox.style.left =`-${(ulBox.children.length-1)*moveWidth}px`
-            clickCount=5
+            clickCount=ulBox.children.length-1
         }
         clickCount--
         //当前位移长度
