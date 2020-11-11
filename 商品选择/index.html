@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./jquery-1.12.4.js"></script>
+    <script src="./template-web.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        img {
+            /* border 0 照顾低版本浏览器 如果 图片外面包含了链接会有边框的问题 */
+            border: 0;
+            /* 取消图片底侧有空白缝隙的问题 */
+            vertical-align: middle
+        }
+
+        ul, li {
+            list-style: none
+        }
+
+        body {
+            min-width: 1200px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product_info {
+
+            width: 1069px;
+            height: 500px;
+            margin: 100px auto;
+            border: 1px solid black;
+            display: flex;
+            align-items: center;
+            background-color: #fefefe;
+            /*justify-content:space-evenly;*/
+
+        }
+
+        .wrap__preview {
+            height: 449px;
+            width: 449px;
+            border: 1px solid black;
+            margin-left: 50px;
+        }
+
+        .wrap__preview > a {
+
+            display: block;
+        }
+
+        .wrap__preview img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .wrap__item-info {
+            font-size: 18px;
+            flex: 1 1 auto;
+            height: 449px;
+            margin-left: 20px;
+            /*border: 1px solid black;*/
+
+        }
+
+        .choose::after {
+            content: '';
+            display: block;
+            height: 1px;
+            width: 100%;
+            margin-top: 60px;
+            background-color: #ededed;
+
+        }
+
+        .choose__attr {
+            display: flex;
+            align-items: center;
+            /*justify-content*/
+            margin-top: 15px;
+
+        }
+
+        .choose__attr-name {
+            margin-right: 5px;
+
+        }
+
+        .choose__attr-options {
+            display: flex;
+
+
+        }
+
+        .choose__attr-option {
+            border: 2px solid #ededed;
+            padding: 8px 5px;
+            color: #8a8b8d;
+
+        }
+
+        .choose__attr-option:not(:first-child) {
+            margin-left: 4px;
+        }
+
+        .choose__attr-option.active {
+            border: 1px solid #ef8850;
+            position: relative;
+        }
+
+        .choose__attr-option.active::after {
+            content: '';
+            display: block;
+            position: absolute;
+            background: url('./images/on.png') center center no-repeat;
+            right: 0;
+            bottom: 0;
+            width: 20px;
+            height: 20px;
+            background-position: 5px 6px;
+        }
+
+
+        .price {
+            display: flex;
+            margin-top: 5px;
+
+        }
+
+        .price span {
+            margin-right: 5px;
+        }
+
+        .price__value {
+            margin-left: 15px;
+            margin-right: 5px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="product_info">
+        <div class="wrap__preview">
+            <a href="#">
+                <img src="images/black.jpg" alt="">
+            </a>
+        </div>
+        <div class="wrap__item-info">
+            <div class="choose" id="choose">
+            </div>
+            <div class="price">
+                <span>价格:</span>
+                <div class="price__value">
+                    ¥<span>6888</span>
+                </div>
+                <button>
+                    立即购买
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="chooseContent" type="text/html">
+    {{each sku}}
+
+    <div class="choose__attr">
+        <!--        key-->
+        {{set
+    key = $value.key}}
+        <!--        options-->
+        {{set
+    options = $value.options}}
+        {{each
+    key}}
+        <span class="choose__attr-name">{{$value}}</span>
+        <div class="choose__attr-options" id="{{$index}}">
+            {{each
+        options}}
+            <div class="choose__attr-option" data-val="{{$index}}">{{$value}}</div>
+            {{/each}}
+        </div>
+        {{/each}}
+    </div>
+
+    {{/each}}
+</script>
+<script>
+
+    $(function () {
+
+        //不同商品属性单位不同的 比如手机是[颜色,内存，版本]  也可能是[颜色，内存，尺寸，版本] 或者电脑[颜色，cpu,...]
+        const data = {
+            //商品多种属性
+            sku: {
+                0: {
+                    "key": {"color": "颜色"},
+                    "options": {
+                        "black": "黑色",
+                        "white": "白色",
+                        "red": "红色",
+                        "yellow": "黄色",
+                        "green": "绿色",
+                    },
+                },
+                1: {
+                    "key": {"memory": "内存"},
+                    "options": {
+                        "small": "64GB",
+                        "medium": "128GB",
+                        "large": "256GB"
+                    },
+
+                },
+                2: {
+                    "key": {"version": "版本"},
+                    "options": {
+                        "qw": "全网通",
+                        "yd": "移动版",
+                        "lt": "联通版",
+                        "dx": "电信版"
+                    }
+                }
+            },
+            price: {
+                "small": 6888,
+                "medium": 7888,
+                "large": 8888
+            },
+            imageUrl: {
+                "black": "images/black.jpg",
+                "white": "images/white.jpg",
+                "red": "images/red.jpg",
+                "yellow": "images/yellow.jpg",
+                "green": "images/green.jpg"
+            }
+        }
+
+        //渲染choose数据
+        const res = template('chooseContent', data);
+        // console.log(res)
+        $('#choose').html(res)
+        //  第一个为激活状态
+        Array.from($('.choose__attr-options')).forEach(item => {
+            $(item).find('.choose__attr-option').eq(0).addClass('active')
+        })
+        //渲染价格数据
+        const key=Object.keys(data.price)[0]
+        changePrice(key)
+        //点击切换
+        $('#choose').on('click', '.choose__attr-option', function (e) {
+            $(this).addClass('active').siblings().removeClass('active')
+            //获取颜色的值
+            const option=$(this).attr('data-val')
+            console.log(option)  //可能为 'black','small','medium'
+            //切换图片
+
+            changeImg(option)
+            //切换价格
+            changePrice(option)  // small medium large
+        })
+
+        //切换图片
+        function changeImg(img){
+           //获取url
+            const url=data.imageUrl[img]
+            //需要判断，否则会报错
+            if(url){
+                $('.wrap__preview img').attr('src',url)
+            }
+        }
+
+        //切换价格
+        function changePrice(option){
+            const price=data.price[option]
+            if(price){
+                $('.price__value>span').text(price.toFixed(2))
+            }
+
+        }
+
+    })
+</script>
+
+</body>
+</html>
+
