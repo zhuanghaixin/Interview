@@ -1,11 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 800px;
+            height: 1500px;
+            background-color: pink;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+<div class="box"></div>
+</body>
+<script>
+// 节流：
+//  特点：
+//      当持续触发事件时，每隔固定时间也会执行一次逻辑代码
+//      当触发停止时，过一段时间再执行逻辑代码
+
+// 开始的时间 & 当前时间 & 时间的间隔
+var beginTime = Date.now() // 00:00:00 000
+var timer = null
+window.onscroll = function () {
+    // 清除定时器：
+    clearTimeout(timer)
+    // 当前时间
+    var currentTime = Date.now() // 00:00:01 000 00：00：01 019
+    // 得到时间的间隔
+    var space = currentTime - beginTime
+    // 判断
+    if (space >= 1000) {
+        console.log('哎呀，滚动啦') // 执行
+        // 将当前执行的时候设置为开始时间
+        beginTime = Date.now()
+    } else {
+        timer = setTimeout(() => {
+            console.log('哎呀，滚动啦')
+        }, 1000);
+    }
+}
+// 执行过程：触发事件 100 次
+//  打开页面时： 记录打开页面的时间 beginTime
+//  第一次：
+//      得到当前时间与 beginTime 之间的时间间隔，间隔大于 1s，马上打印一次，记录此时的时间
+//  第二次：
+//      得到当前时间与第一次执行时间之间的间隔，间隔小于 1s, 不理会
+//  第三次：
+//      得到当前时间与第一次执行时间之间的间隔，间隔小于 1s, 不理会
+//  第四次：
+//      得到当前时间与第一次执行时间之间的间隔，间隔也小于 1s, 不理会
+//  ...
+//  第六十九次：
+//      得到当前时间与第一次执行时间之间的间隔，间隔大于 1s, 马上再打印一次，记录此时的时间
+// 第七十次
+//      得到当前时间与第六十九次执行时间之间的间隔，间隔小于 1s, 不理会
+// .....
+// 作业：理解防抖与节流并且将节流的代码封装为一个函数
+</script>
+
+</html>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/FEA-Code" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/FEG-Code" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/FrondEndInterviewCode" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/FrontEndInterviewCode" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/feh" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/feq" vcs="Git" />
+  </component>
+</project>

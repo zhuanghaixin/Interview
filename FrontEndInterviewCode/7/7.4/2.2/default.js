@@ -1,5 +1,0 @@
-console.log(String(true)); 			//"true"
-console.log(String(1.2)); 			//"1.2"
-console.log(String({})); 			//"[object Object]"
-console.log(String(null)); 			//"null"
-console.log(String(undefined)); 	//"undefined"

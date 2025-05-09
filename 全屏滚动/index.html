@@ -1,11 +1,108 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+        .page-container {
+            position: relative;
+            top: 0;
+            transition: all 1000ms ease;
+            touch-action: none;
+        }
+        .page-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            border: 1px solid #ddd;
+        }
+    </style>
 </head>
 <body>
-$END$
+<div class="page-container">
+    <div class="page-item">1</div>
+    <div class="page-item">2</div>
+    <div class="page-item">3</div>
+</div>
+<script>
+    var container = document.querySelector('.page-container')
+    // 获取根元素高度, 页面可视高度
+    var viewHeight = document.documentElement.clientHeight
+    // 获取滚动的页数
+    var pageNum = document.querySelectorAll('.page-item').length
+    // 初始化当前位置, 距离原始顶部距离
+    var currentPosition = 0
+    // 设置页面高度
+    container.style.height = viewHeight + 'px'
+
+    // 向下滚动页面
+    function goDown () {
+        if (currentPosition > - viewHeight * (pageNum - 1)) {
+            currentPosition = currentPosition - viewHeight
+            container.style.top = currentPosition + 'px'
+        }
+    }
+
+    // 向上滚动页面
+    function goUp () {
+        if (currentPosition < 0) {
+            currentPosition = currentPosition + viewHeight
+            container.style.top = currentPosition + 'px'
+        }
+    }
+
+    function throttle (fn, delay) {
+        let baseTime = 0
+        return function () {
+            const currentTime = Date.now()
+            if (baseTime + delay < currentTime) {
+                fn.apply(this, arguments)
+                baseTime = currentTime
+            }
+        }
+    }
+
+    var handlerWheel = throttle(scrollMove, 1000)
+    // https://developer.mozilla.org/en-US/docs/Web/API/Element/mousewheel_event#The_detail_property
+    // firefox的页面滚动事件其他浏览器不一样
+    if (navigator.userAgent.toLowerCase().indexOf('firefox') === -1) {
+        document.addEventListener('mousewheel', handlerWheel)
+    } else {
+        document.addEventListener('DOMMouseScroll', handlerWheel)
+    }
+    function scrollMove (e) {
+        if (e.deltaY > 0) {
+            goDown()
+        } else {
+            goUp()
+        }
+    }
+
+    var touchStartY = 0
+    document.addEventListener('touchstart', event => {
+        touchStartY = event.touches[0].pageY
+    })
+    var handleTouchEnd = throttle(touchEnd, 500)
+    document.addEventListener('touchend', handleTouchEnd)
+    function touchEnd (e) {
+        var touchEndY = e.changedTouches[0].pageY
+        if (touchEndY - touchStartY < 0) { // 向上滑动, 页面向下滚动
+            goDown()
+        } else {
+            goUp()
+        }
+    }
+</script>
 </body>
 </html>
-

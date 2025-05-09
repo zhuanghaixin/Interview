@@ -155,8 +155,7 @@
             console.log($(this).index());
             index = $(this).index()
             $(this).addClass('active').siblings().removeClass('active')
-            $('.slider ul').stop(true,false).animate({left: `-${moveWidth * index}`}, 1000)
-
+            $('.slider>ul').stop(true,false).animate({left: `-${moveWidth * index}`}, 1000)
             // 当点击数字按钮的时候,将数字按钮的索引与clickCount进行同步
             clickCount=index
         })
@@ -192,24 +191,16 @@
         })
 
 
-
-
-
-
-
         function rightMove(){
 
             if(clickCount===liNumber){
-                console.log(clickCount,'clickCount')
-                console.log('zzzzzz')
                 $('.slider ul').css('left','0px')
                 clickCount=0
             }
             clickCount++
             let target=-clickCount*moveWidth
             console.log(target)
-            console.log(liNumber)
-            console.log(clickCount,'clickCount')
+
             $('.slider ul').stop(true,false).animate({left: `${target}`}, 1000)
 
             if(clickCount===liNumber){

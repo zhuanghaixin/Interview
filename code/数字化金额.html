@@ -1,11 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
 </head>
 <body>
-$END$
+<script>
+
+// 1 ,234,56 7 ,890
+// 从右往左看，每三个数字加一个",",所以按下标索引0，1，2，3来算的话，就是第3个后面加"，"
+var num='1234567890'
+
+var newArr=num.split('').reverse()  // ["0", "9", "8", "7", "6", "5", "4", "3", "2", "1"]
+
+var result=[]
+for(let i=0;i<newArr.length;i++){
+    if(i%3===0&&i!==0){
+        result.unshift(`${newArr[i]},`)
+    }else{
+        result.unshift(newArr[i])
+    }
+    console.log('当前数组')
+    console.log(result)
+}
+console.log(result)
+console.log(result.join(''))
+
+
+
+
+</script>
 </body>
 </html>
 

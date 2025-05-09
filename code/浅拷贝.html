@@ -1,11 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
 </head>
 <body>
-$END$
+<script>
+
+
+let obj1 = {
+    name : '浪里行舟',
+    arr : [1,[2,3],4],
+};
+let obj3=shallowClone(obj1)
+obj3.name = "阿浪";
+obj3.arr[1] = [5,6,7] ; // 新旧对象还是共享同一块内存
+// 这是个浅拷贝的方法
+function shallowClone(source) {
+    var target = {};
+    for(var i in source) {
+        if (source.hasOwnProperty(i)) {
+            target[i] = source[i];
+        }
+    }
+    return target;
+}
+console.log('obj1',obj1) // obj1 { name: '浪里行舟', arr: [ 1, [ 5, 6, 7 ], 4 ] }
+console.log('obj3',obj3) // obj3 { name: '阿浪', arr: [ 1, [ 5, 6, 7 ], 4 ] }
+
+
+
+</script>
 </body>
 </html>
 
